@@ -1,0 +1,30 @@
+{
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["prettier"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+	"jest/globals": true // Add this line
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "tabWidth": 4,
+        "useTabs": true,
+        "endOfLine": "auto"
+      }
+    ],
+    "indent": ["error", "tab"],
+    "no-tabs": "off"
+  },
+  "overrides": [
+    {
+      "files": ["tests/**/*"],
+      "plugins": ["jest"],
+      "env": {
+        "jest/globals": true
+      }
+    }
+  ]
+}
