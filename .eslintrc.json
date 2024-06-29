@@ -16,7 +16,8 @@
       }
     ],
     "indent": ["error", "tab"],
-    "no-tabs": "off"
+    "no-tabs": "off",
+	"no-labels":"off"
   },
   "overrides": [
     {
