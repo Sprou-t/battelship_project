@@ -17,7 +17,8 @@
     ],
     "indent": ["error", "tab"],
     "no-tabs": "off",
-	"no-labels":"off"
+	"no-labels":"off",
+	"func-names":"off"
   },
   "overrides": [
     {

@@ -35,10 +35,12 @@ describe('test receiveAttack function', () => {
 		expect(gamingBoard.missedAttack).toBe(0);
 		gamingBoard.receiveAttack(3, 2);
 
-		expect(gamingBoard).toHaveProperty('missedAttack', 1);
+		expect(gamingBoard.missedAttack).toBe(1);
 		expect(gamingBoard.board[3][2].hit).toBe(true);
 		expect(ship1.hitStat).toBe(0);
 		expect(ship2.hitStat).toBe(0);
+		gamingBoard.receiveAttack(3, 3);
+		expect(gamingBoard.missedAttack).toBe(2);
 	});
 	test('attack landed on ship1', () => {
 		gamingBoard.receiveAttack(1, 2);
@@ -65,5 +67,13 @@ describe('test receiveAttack function', () => {
 		expect(ship1.hitStat).toBe(0);
 		expect(ship2.hitStat).toBe(4);
 		expect(ship2.isSunk).toBeTruthy();
+	});
+
+	test('report game over', () => {
+		expect(gamingBoard.gameOver).toBe(false);
+		gamingBoard.reportGameOver(0, 1, 1, 1, 1);
+		expect(gamingBoard.gameOver).toBe(false);
+		gamingBoard.reportGameOver(1, 1, 1, 1, 1);
+		expect(gamingBoard.gameOver).toBe(true);
 	});
 });

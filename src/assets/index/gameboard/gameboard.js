@@ -9,7 +9,8 @@ function gameBoard() {
 				.map((cell) => ({ hit: false, ship: undefined }))
 		);
 
-	let missedAttack = 0;
+	const missedAttack = 0;
+	const gameOver = false;
 
 	function shipPlacement(orientation, x, y, length, ship) {
 		let checkSpace = true;
@@ -44,12 +45,11 @@ function gameBoard() {
 	}
 
 	// take coordinates and fire off at that coordinate
-	function receiveAttack(x, y) {
+	const receiveAttack = function (x, y) {
 		// if attack missed, record down the hit & miss counter
 		if (board[x][y].ship === undefined) {
 			board[x][y].hit = true;
-			missedAttack += 1;
-			console.log(missedAttack);
+			this.missedAttack += 1;
 		}
 
 		// if attack hit, record down hit and increase ship hit count
@@ -61,9 +61,35 @@ function gameBoard() {
 				// alert that the ship is sunk!
 			}
 		}
-	}
+	};
 
-	return { board, missedAttack, shipPlacement, receiveAttack }; // Return both board and shipPlacement
+	// report game over
+	const reportGameOver = function (
+		ship1Sinkstatus,
+		ship2Sinkstatus,
+		ship3Sinkstatus,
+		ship4Sinkstatus,
+		ship5Sinkstatus
+	) {
+		if (
+			ship1Sinkstatus &&
+			ship2Sinkstatus &&
+			ship3Sinkstatus &&
+			ship4Sinkstatus &&
+			ship5Sinkstatus
+		) {
+			this.gameOver = true;
+		}
+	};
+
+	return {
+		board,
+		missedAttack,
+		gameOver,
+		shipPlacement,
+		receiveAttack,
+		reportGameOver,
+	}; // Return both board and shipPlacement
 }
 
 export default gameBoard;
