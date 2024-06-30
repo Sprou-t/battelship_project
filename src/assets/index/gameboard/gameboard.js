@@ -1,10 +1,15 @@
-import createShip from '../ship/ship';
-
 function gameBoard() {
 	const boardLength = 10;
+
 	const board = Array(boardLength)
 		.fill(null)
-		.map(() => Array(boardLength).fill({ hit: false, ship: undefined }));
+		.map((row) =>
+			Array(boardLength)
+				.fill(null)
+				.map((cell) => ({ hit: false, ship: undefined }))
+		);
+
+	let missedAttack = 0;
 
 	function shipPlacement(orientation, x, y, length, ship) {
 		let checkSpace = true;
@@ -38,7 +43,27 @@ function gameBoard() {
 		}
 	}
 
-	return { board, shipPlacement }; // Return both board and shipPlacement
+	// take coordinates and fire off at that coordinate
+	function receiveAttack(x, y) {
+		// if attack missed, record down the hit & miss counter
+		if (board[x][y].ship === undefined) {
+			board[x][y].hit = true;
+			missedAttack += 1;
+			console.log(missedAttack);
+		}
+
+		// if attack hit, record down hit and increase ship hit count
+		if (board[x][y].ship !== undefined) {
+			board[x][y].hit = true;
+			board[x][y].ship.isHit();
+
+			if (board[x][y].ship.isSunk) {
+				// alert that the ship is sunk!
+			}
+		}
+	}
+
+	return { board, missedAttack, shipPlacement, receiveAttack }; // Return both board and shipPlacement
 }
 
 export default gameBoard;
