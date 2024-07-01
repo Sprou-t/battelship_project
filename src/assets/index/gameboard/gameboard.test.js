@@ -1,12 +1,12 @@
 import createShip from '../ship/ship';
-import gameBoard from './gameboard';
+import createBoard from './gameboard';
 
 let gamingBoard;
 let ship1;
 let ship2;
 
 beforeEach(() => {
-	gamingBoard = gameBoard();
+	gamingBoard = createBoard();
 	ship1 = createShip(3);
 	ship2 = createShip(4);
 	gamingBoard.shipPlacement(0, 0, 2, ship1.length, ship1);

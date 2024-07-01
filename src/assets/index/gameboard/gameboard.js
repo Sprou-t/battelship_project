@@ -1,6 +1,7 @@
-function gameBoard() {
+function createBoard() {
 	const boardLength = 10;
 
+	// board contains the 
 	const board = Array(boardLength)
 		.fill(null)
 		.map((row) =>
@@ -15,6 +16,7 @@ function gameBoard() {
 	function shipPlacement(orientation, x, y, length, ship) {
 		let checkSpace = true;
 
+		// if ori false, hori. if ori true, vertical
 		if (!orientation) {
 			for (let i = 0; i < length; i += 1) {
 				if (board[x + i][y].ship !== undefined) {
@@ -92,4 +94,4 @@ function gameBoard() {
 	}; // Return both board and shipPlacement
 }
 
-export default gameBoard;
+export default createBoard;
