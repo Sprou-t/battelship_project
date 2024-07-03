@@ -1,7 +1,7 @@
 function createBoard() {
 	const boardLength = 10;
 
-	// board contains the 
+	// board is 10x10
 	const board = Array(boardLength)
 		.fill(null)
 		.map((row) =>

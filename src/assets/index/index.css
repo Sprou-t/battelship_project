@@ -1,0 +1,22 @@
+body{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.header{
+	flex: 1;
+}
+
+.boardDiv{
+	flex: 4;
+	height: 100%;
+	display: flex;
+}
+
+.grid{
+	height:4px ;
+	width: 4px;
+	border-top: 1px solid black;
+	border-left:1px solid black ;
+}
