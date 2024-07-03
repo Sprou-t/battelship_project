@@ -6,17 +6,32 @@ body{
 
 .header{
 	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5rem;
 }
 
 .boardDiv{
 	flex: 4;
 	height: 100%;
 	display: flex;
+	gap: 200px;
+	justify-content: center;
+	align-items: center;
+}
+
+.player1Board, .player2Board{
+	display: grid;
+	grid-template: repeat(10,30px)/ repeat(10,30px);
 }
 
 .grid{
-	height:4px ;
-	width: 4px;
-	border-top: 1px solid black;
-	border-left:1px solid black ;
+	height:30px;
+	width: 30px;
+	border: 1px solid black;
+	font-size: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

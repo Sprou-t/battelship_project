@@ -3,16 +3,7 @@ import './index.css';
 import './reset.css';
 import gameBoard from './gameboard/gameboard';
 import createShip from './ship/ship';
-
-// create a function that generates 100 grids in each board
-const addBoardGrids = function (playerBoard) {
-	const length = 10;
-	for (let i = 0; i < length * length; i += 1) {
-		const grid = document.createElement('div');
-		grid.classList.add('grid');
-		playerBoard.append(grid);
-	}
-};
+import { addBoard1Grids, addBoard2Grids, clickGrid, getGridCoordinate } from './boardGrid/grid';
 
 const createPage = (function () {
 	const body = document.querySelector('body');
@@ -24,14 +15,24 @@ const createPage = (function () {
 
 	// create 2 boards & 1 text line
 	const player1Board = document.createElement('div');
+	player1Board.classList.add('player1Board');
 	const player2Board = document.createElement('div');
+	player2Board.classList.add('player2Board');
 	const textIndicator = document.createElement('p');
 	textIndicator.textContent = 'Battleship!';
 
-	addBoardGrids(player1Board);
-	addBoardGrids(player2Board);
+	addBoard1Grids(player1Board);
+	addBoard2Grids(player2Board);
 
 	header.append(textIndicator);
 	boardDiv.append(player1Board, player2Board);
 	body.append(header, boardDiv);
+})();
+
+const gameController = (function () {
+	// TODO:
+	// use coordinate for ship placement
+	// create a button to orientate the ship in another mod
+	// use the grid coordinate on the gameboard class to see if attack hit or missed
+	
 })();
