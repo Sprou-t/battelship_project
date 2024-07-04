@@ -39,13 +39,12 @@ body{
 }
 
 .ship:hover{
-	transform: scale(1.1);
+	transform: scale(1.3);
 
 }
 
-.ship:active{
-	transform: scale(1.1);
-	border: 1px solid white;
+.select{
+	transform: scale(1.3);
 }
 
 .player1Board, .player2Board{
