@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { addBoard1Grids, addBoard2Grids } from '../boardGrid/grid';
 
 const getSelectedShipLength = function (ship) {
@@ -28,6 +29,17 @@ const selectShip = function () {
 	});
 };
 
+const changeOrientationBtn = function (orientationBtn) {
+	// INCOMPLETE: need to link to GameBoard function
+	orientationBtn.addEventListener('click', () => {
+		if (orientationBtn.textContent === 'Horizontal') {
+			orientationBtn.textContent = 'Vertical';
+		} else {
+			orientationBtn.textContent = 'Horizontal';
+		}
+	});
+};
+
 const createPage = function () {
 	const body = document.querySelector('body');
 
@@ -39,6 +51,11 @@ const createPage = function () {
 	// create 2 boards, 1 ship div &  1 text line
 	const shipDiv = document.createElement('div');
 	shipDiv.classList.add('shipDiv');
+	const orientationBtn = document.createElement('button');
+	orientationBtn.classList.add('orientationBtn');
+	orientationBtn.textContent = 'Horizontal';
+	const shipArea = document.createElement('div');
+	shipArea.classList.add('shipArea');
 
 	const carrierShip = document.createElement('p');
 	carrierShip.textContent = 'Carrier';
@@ -60,7 +77,7 @@ const createPage = function () {
 	patrolBoat.textContent = 'Patrol Boat';
 	patrolBoat.classList.add('patrolBoat', 'ship');
 
-	shipDiv.append(carrierShip, battleship, destroyer, submarine, patrolBoat);
+	shipArea.append(carrierShip, battleship, destroyer, submarine, patrolBoat);
 
 	const player1Board = document.createElement('div');
 	player1Board.classList.add('player1Board');
@@ -73,9 +90,11 @@ const createPage = function () {
 	addBoard2Grids(player2Board);
 
 	header.append(textIndicator);
+	shipDiv.append(orientationBtn, shipArea);
 	boardDiv.append(shipDiv, player1Board, player2Board);
 	body.append(header, boardDiv);
 	selectShip();
+	changeOrientationBtn(orientationBtn);
 };
 
 export default createPage;

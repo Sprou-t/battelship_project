@@ -23,6 +23,21 @@ body{
 }
 
 .shipDiv{
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	align-items: center;
+}
+
+.orientationBtn{
+	appearance: none;
+	border-radius: 10px;
+	background-color: red;
+	color: white;
+	font-weight: 800;
+	width: 90px;
+}
+.shipArea{
 	height: 350px;
 	width: 200px;
 	background-color: rgb(39, 39, 136);

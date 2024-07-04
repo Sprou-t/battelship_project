@@ -2,11 +2,13 @@
 import './index.css';
 import './reset.css';
 import createPage from './DOMMethods/DOM';
+import { getGridCoordinate } from './boardGrid/grid';
 
 const gameController = (function () {
 	createPage();
 	// TODO
-	// use coordinate for ship placement
-	// create a button to orientate the ship in another mod
-	// use the grid coordinate on the gameboard class to see if attack hit or missed
+	// Select ship first, which will register the length
+	// click on the grid to place the getGridCoordinate.The getGridCoordinate
+	// should be used. The gameBoard class should be updated
+	// Also implement the logic of changing the ship's orientation
 })();
