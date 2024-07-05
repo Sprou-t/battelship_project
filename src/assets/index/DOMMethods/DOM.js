@@ -16,13 +16,24 @@ const getSelectedShipLength = function (ship) {
 	}
 	return shipLength;
 };
-
+const addShipToGrid = function () {};
 const selectShip = function () {
 	const shipList = document.querySelectorAll('.ship');
 	shipList.forEach((ship) => {
 		ship.addEventListener('click', () => {
 			ship.classList.add('select');
 			const shipLength = getSelectedShipLength(ship);
+			// add another function that will add event listener to our grid
+			const gridOneGrids = document.querySelectorAll('.grid.one');
+			gridOneGrids.forEach((grid) => {
+				grid.addEventListener('click', () => {
+					// depending on ship & orient, if it is this ship,
+					// if (ship== x and orientation ==  xxx)
+					// activate the gameboard ship placement function
+					// mark out the grid DOM
+				});
+			});
+			// to place ship. Bf dat, remove the event listeners
 			// use the shiplength on to the class?
 			// get orientation and use on class too?
 		});

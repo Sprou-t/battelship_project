@@ -21,8 +21,8 @@ const addBoard2Grids = function (playerBoard) {
 	// const gridList = [];
 	for (let i = 0; i < length * length; i += 1) {
 		const grid = document.createElement('div');
-		grid.classList.add('grid');
-		clickGrid(grid, i);
+		grid.classList.add('grid', 'two');
+		// clickGrid(grid, i);
 		playerBoard.append(grid);
 	}
 };
@@ -31,7 +31,7 @@ const addBoard1Grids = function (playerBoard) {
 	const length = 10;
 	for (let i = 0; i < length * length; i += 1) {
 		const grid = document.createElement('div');
-		grid.classList.add('grid');
+		grid.classList.add('grid', 'one');
 		playerBoard.append(grid);
 	}
 };

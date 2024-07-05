@@ -7,7 +7,7 @@ import { getGridCoordinate } from './boardGrid/grid';
 const gameController = (function () {
 	createPage();
 	// TODO
-	// Select ship first, which will register the length
+	// seq: click on ship first which will get the length and orientation then 
 	// click on the grid to place the getGridCoordinate.The getGridCoordinate
 	// should be used. The gameBoard class should be updated
 	// Also implement the logic of changing the ship's orientation
