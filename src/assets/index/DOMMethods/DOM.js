@@ -1,52 +1,79 @@
 /* eslint-disable no-param-reassign */
-import { addBoard1Grids, addBoard2Grids } from '../boardGrid/grid';
+import {
+	addBoard1Grids,
+	addBoard2Grids,
+	getGridCoordinate,
+} from '../boardGrid/grid';
 
-const getSelectedShipLength = function (ship) {
-	let shipLength;
-	if (ship.textContent === 'Carrier') {
-		shipLength = 5;
-	} else if (ship.textContent === 'BattleShip') {
-		shipLength = 4;
-	} else if (ship.textContent === 'Destroyer') {
-		shipLength = 3;
-	} else if (ship.textContent === 'Submarine') {
-		shipLength = 3;
+let orientationValue;
+let selectedShip;
+let selectedShipLength;
+
+const getSelectedShipLength = function () {
+	if (selectedShip === 'Carrier') {
+		selectedShipLength = 5;
+	} else if (selectedShip === 'BattleShip') {
+		selectedShipLength = 4;
+	} else if (selectedShip === 'Destroyer' || selectedShip === 'Submarine') {
+		selectedShipLength = 3;
 	} else {
-		shipLength = 2;
+		selectedShipLength = 2;
 	}
-	return shipLength;
+	return selectedShipLength;
 };
-const addShipToGrid = function () {};
+
+const addShipToBoard = function (player, x, y, length) {
+	if (selectedShip) {
+		const shipLength = getSelectedShipLength();
+		// get orientation value
+		orientationValue = document.querySelector('.orientationBtn').value;
+		// get grid index from addBoard1Grid, process it with getGridCoordinate
+		const gridList = document.querySelectorAll('.grid');
+		gridList.forEach((grid) => {
+			grid.addEventListener('click', () => {
+				const getFirstGridPlacementIndex = grid.dataset.index;
+				const { x, y } = getGridCoordinate(getFirstGridPlacementIndex);
+				if (orientationValue) {
+					// if vertical
+					for (let i = 0; i < shipLength; i += 1) {
+						// use the dataset.index to locate the subsequent grids
+						// if it is vertical, add 10, but if it is horizontal, add 1
+					}
+				}
+			});
+		});
+		// to get x & y value
+		// if horizontal, then get the grid index, then add the index by ship length to change DOM
+		player.ownBoard.shipPlacement(
+			orientationValue,
+			x,
+			y,
+			length,
+			selectedShip
+		);
+	}
+};
+
 const selectShip = function () {
 	const shipList = document.querySelectorAll('.ship');
 	shipList.forEach((ship) => {
 		ship.addEventListener('click', () => {
-			ship.classList.add('select');
-			const shipLength = getSelectedShipLength(ship);
-			// add another function that will add event listener to our grid
-			const gridOneGrids = document.querySelectorAll('.grid.one');
-			gridOneGrids.forEach((grid) => {
-				grid.addEventListener('click', () => {
-					// depending on ship & orient, if it is this ship,
-					// if (ship== x and orientation ==  xxx)
-					// activate the gameboard ship placement function
-					// mark out the grid DOM
-				});
-			});
-			// to place ship. Bf dat, remove the event listeners
-			// use the shiplength on to the class?
-			// get orientation and use on class too?
+			shipList.forEach((s) => s.classList.remove('selected'));
+			ship.classList.add('selected');
+			selectedShip = ship.textContent;
 		});
 	});
 };
 
-const changeOrientationBtn = function (orientationBtn) {
+const changeShipOrientation = function (orientationBtn) {
 	// INCOMPLETE: need to link to GameBoard function
 	orientationBtn.addEventListener('click', () => {
 		if (orientationBtn.textContent === 'Horizontal') {
 			orientationBtn.textContent = 'Vertical';
+			orientationValue = 1;
 		} else {
 			orientationBtn.textContent = 'Horizontal';
+			orientationValue = 0;
 		}
 	});
 };
@@ -69,11 +96,11 @@ const createPage = function () {
 	shipArea.classList.add('shipArea');
 
 	const carrierShip = document.createElement('p');
-	carrierShip.textContent = 'Carrier';
+	carrierShip = 'Carrier';
 	carrierShip.classList.add('Carrier', 'ship');
 
 	const battleship = document.createElement('p');
-	battleship.textContent = 'Battleship';
+	battleship = 'Battleship';
 	battleship.classList.add('battleship', 'ship');
 
 	const destroyer = document.createElement('p');
@@ -104,8 +131,11 @@ const createPage = function () {
 	shipDiv.append(orientationBtn, shipArea);
 	boardDiv.append(shipDiv, player1Board, player2Board);
 	body.append(header, boardDiv);
-	selectShip();
-	changeOrientationBtn(orientationBtn);
 };
 
-export default createPage;
+export {
+	createPage as default,
+	selectShip,
+	addShipToBoard,
+	getSelectedShipLength,
+};

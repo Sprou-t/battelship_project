@@ -6,7 +6,7 @@ const getGridCoordinate = function (gridIndex) {
 	return { x, y };
 };
 
-const clickGrid = function (grid, gridIndex) {
+const markOutGrid = function (grid, gridIndex) {
 	grid.addEventListener('click', () => {
 		// eslint-disable-next-line no-param-reassign
 		grid.textContent = 'X';
@@ -17,21 +17,22 @@ const clickGrid = function (grid, gridIndex) {
 
 // create a function that generates 100 grids in each board
 const addBoard2Grids = function (playerBoard) {
-	const length = 10;
 	// const gridList = [];
-	for (let i = 0; i < length * length; i += 1) {
+	for (let i = 0; i < 100; i += 1) {
 		const grid = document.createElement('div');
 		grid.classList.add('grid', 'two');
-		// clickGrid(grid, i);
+		grid.dataset.index = i;
+		// markOutGrid(grid, i);
 		playerBoard.append(grid);
 	}
 };
 
 const addBoard1Grids = function (playerBoard) {
-	const length = 10;
-	for (let i = 0; i < length * length; i += 1) {
+	for (let i = 0; i < 100; i += 1) {
 		const grid = document.createElement('div');
 		grid.classList.add('grid', 'one');
+		// give each element a new data attribute called index
+		grid.dataset.index = i;
 		playerBoard.append(grid);
 	}
 };

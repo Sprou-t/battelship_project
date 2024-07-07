@@ -5,6 +5,7 @@ function createPlayer(type) {
 		type,
 		ownBoard: createBoard(),
 	};
+	// if it's AI, it has its own properties like own ship placement and attacks
 }
 
 export default createPlayer;
