@@ -1,17 +1,20 @@
-const getGridCoordinate = function (gridIndex) {
+const getGridIndex = function (grid) {
+	const gridIndex = Math.floor(grid.dataset.index);
+	return gridIndex;
+};
+
+const getGridCoordinate = function (grid) {
+	const gridIndex = grid.dataset.index;
 	const x = gridIndex % 10;
-	const y = parseInt(gridIndex / 10, 10);
-	console.log(x);
-	console.log(y);
+	const y = Math.floor(gridIndex / 10);
 	return { x, y };
 };
 
-const markOutGrid = function (grid, gridIndex) {
+const markOutGrid = function (grid) {
 	grid.addEventListener('click', () => {
 		// eslint-disable-next-line no-param-reassign
 		grid.textContent = 'X';
-		// register the coordinates to gameBoard function
-		getGridCoordinate(gridIndex);
+		const gridIndex = grid.dataset.index;
 	});
 };
 
@@ -37,4 +40,4 @@ const addBoard1Grids = function (playerBoard) {
 	}
 };
 
-export { addBoard1Grids, addBoard2Grids, getGridCoordinate };
+export { addBoard1Grids, addBoard2Grids, getGridCoordinate, getGridIndex };

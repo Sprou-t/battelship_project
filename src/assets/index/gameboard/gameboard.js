@@ -17,7 +17,7 @@ function createBoard() {
 		let checkSpace = true;
 
 		// if ori false, hori. if ori true, vertical
-		if (!orientation) {
+		if (orientation === 'Horizontal') {
 			for (let i = 0; i < length; i += 1) {
 				if (board[x + i][y].ship !== undefined) {
 					checkSpace = false;
@@ -34,7 +34,7 @@ function createBoard() {
 		}
 
 		if (checkSpace) {
-			if (!orientation) {
+			if (orientation === 'Horizontal') {
 				for (let i = 0; i < length; i += 1) {
 					board[x + i][y].ship = ship;
 				}
