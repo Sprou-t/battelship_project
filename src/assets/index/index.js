@@ -5,7 +5,6 @@ import {
 	createPage,
 	selectShip,
 	addShipToBoard,
-	getSelectedShipLength,
 	changeShipOrientation,
 } from './DOMMethods/DOM';
 import createPlayer from './player/player';
@@ -17,7 +16,7 @@ const gameController = (function () {
 	const player2 = createPlayer('AI');
 	selectShip();
 	// need to find a way to get x & y
-	addShipToBoard(player1, getSelectedShipLength());
+	addShipToBoard(player1);
 
 	// TODO
 	// seq: click on ship first which will get the length and orientation then

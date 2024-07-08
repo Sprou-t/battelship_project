@@ -13,7 +13,7 @@ let selectedShipLength;
 const getSelectedShipLength = function () {
 	if (selectedShip === 'Carrier') {
 		selectedShipLength = 5;
-	} else if (selectedShip === 'BattleShip') {
+	} else if (selectedShip === 'Battleship') {
 		selectedShipLength = 4;
 	} else if (selectedShip === 'Destroyer' || selectedShip === 'Submarine') {
 		selectedShipLength = 3;
@@ -23,7 +23,7 @@ const getSelectedShipLength = function () {
 	return selectedShipLength;
 };
 
-const addShipToBoard = function (player, shipLength) {
+const addShipToBoard = function (player) {
 	// get grid index from addBoard1Grid, process it with getGridCoordinate
 	const gridList = document.querySelectorAll('.grid.one');
 	gridList.forEach((grid) => {
@@ -31,7 +31,6 @@ const addShipToBoard = function (player, shipLength) {
 			if (selectedShip) {
 				orientationValue =
 					document.querySelector('.orientationBtn').textContent;
-				console.log('grid clicked!');
 				const { x, y } = getGridCoordinate(grid);
 				let firstGridIndex = getGridIndex(grid);
 				const firstGridElement = document.querySelector(
@@ -43,24 +42,24 @@ const addShipToBoard = function (player, shipLength) {
 					orientationValue,
 					x,
 					y,
-					shipLength,
+					selectedShipLength,
 					selectedShip
 				);
 
 				if (orientationValue === 'Vertical') {
 					// if vertical
-					for (let i = 0; i < shipLength; i += 1) {
+					for (let i = 1; i < selectedShipLength; i += 1) {
 						// use the dataset.index to locate the subsequent grids
 						// if it is vertical, add 10, but if it is horizontal, add 1
 						firstGridIndex += 10;
-						console.log(firstGridIndex);
+
 						const subsequentGridElement = document.querySelector(
 							`[data-index="${firstGridIndex}"]`
 						);
 						subsequentGridElement.textContent = 'O';
 					}
 				} else {
-					for (let i = 0; i < shipLength; i += 1) {
+					for (let i = 1; i < selectedShipLength; i += 1) {
 						// use the dataset.index to locate the subsequent grids
 						// if it is vertical, add 10, but if it is horizontal, add 1
 						firstGridIndex += 1;
@@ -79,10 +78,10 @@ const selectShip = function () {
 	const shipList = document.querySelectorAll('.ship');
 	shipList.forEach((ship) => {
 		ship.addEventListener('click', () => {
-			console.log('ship  selected');
 			shipList.forEach((s) => s.classList.remove('selected'));
 			ship.classList.add('selected');
 			selectedShip = ship.textContent;
+			selectedShipLength = getSelectedShipLength(selectedShip);
 		});
 	});
 };
@@ -90,7 +89,6 @@ const selectShip = function () {
 const changeShipOrientation = function () {
 	const orientationBtn = document.querySelector('.orientationBtn');
 	orientationBtn.addEventListener('click', () => {
-		console.log('orientation changed');
 		if (orientationBtn.textContent === 'Horizontal') {
 			orientationBtn.textContent = 'Vertical';
 			orientationValue = orientationBtn.textContent;
