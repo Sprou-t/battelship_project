@@ -1,4 +1,3 @@
-// helps manage actions in the DOM
 import './index.css';
 import './reset.css';
 import {

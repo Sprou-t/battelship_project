@@ -7,8 +7,8 @@ import {
 } from '../boardGrid/grid';
 
 let orientationValue = 'Horizontal';
-let selectedShip;
-let selectedShipLength;
+let selectedShip = null;
+let selectedShipLength = null;
 
 const getSelectedShipLength = function () {
 	if (selectedShip === 'Carrier') {
@@ -23,66 +23,103 @@ const getSelectedShipLength = function () {
 	return selectedShipLength;
 };
 
-const addShipToBoard = function (player) {
-	// get grid index from addBoard1Grid, process it with getGridCoordinate
-	const gridList = document.querySelectorAll('.grid.one');
-	gridList.forEach((grid) => {
-		grid.addEventListener('click', () => {
-			if (selectedShip) {
-				orientationValue =
-					document.querySelector('.orientationBtn').textContent;
-				const { x, y } = getGridCoordinate(grid);
-				let firstGridIndex = getGridIndex(grid);
-				const firstGridElement = document.querySelector(
-					`[data-index = "${firstGridIndex}"]`
-				);
-				firstGridElement.textContent = 'O';
-
-				player.ownBoard.shipPlacement(
-					orientationValue,
-					x,
-					y,
-					selectedShipLength,
-					selectedShip
-				);
-
-				if (orientationValue === 'Vertical') {
-					// if vertical
-					for (let i = 1; i < selectedShipLength; i += 1) {
-						// use the dataset.index to locate the subsequent grids
-						// if it is vertical, add 10, but if it is horizontal, add 1
-						firstGridIndex += 10;
-
-						const subsequentGridElement = document.querySelector(
-							`[data-index="${firstGridIndex}"]`
-						);
-						subsequentGridElement.textContent = 'O';
-					}
-				} else {
-					for (let i = 1; i < selectedShipLength; i += 1) {
-						// use the dataset.index to locate the subsequent grids
-						// if it is vertical, add 10, but if it is horizontal, add 1
-						firstGridIndex += 1;
-						const subsequentGridElement = document.querySelector(
-							`[data-index="${firstGridIndex}"]`
-						);
-						subsequentGridElement.textContent = 'O';
-					}
-				}
-			}
-		});
-	});
+const selectShipHandler = function (event) {
+	const shipList = document.querySelectorAll('.ship');
+	shipList.forEach((s) => s.classList.remove('selected'));
+	event.target.classList.add('selected');
+	selectedShip = event.target.textContent;
+	selectedShipLength = getSelectedShipLength(selectedShip);
 };
 
 const selectShip = function () {
 	const shipList = document.querySelectorAll('.ship');
 	shipList.forEach((ship) => {
-		ship.addEventListener('click', () => {
-			shipList.forEach((s) => s.classList.remove('selected'));
-			ship.classList.add('selected');
-			selectedShip = ship.textContent;
-			selectedShipLength = getSelectedShipLength(selectedShip);
-		});
+		ship.addEventListener('click', selectShipHandler);
+	});
+};
+
+const addShipToBoard = function (player) {
+	// get grid index from addBoard1Grid, process it with getGridCoordinate
+	const gridList = document.querySelectorAll('.grid.one');
+	gridList.forEach((grid) => {
+		grid.addEventListener(
+			'click',
+			() => {
+				if (selectedShip) {
+					orientationValue =
+						document.querySelector('.orientationBtn').textContent;
+					const { x, y } = getGridCoordinate(grid);
+					let firstGridIndex = getGridIndex(grid);
+					const firstGridElement = document.querySelector(
+						`[data-index = "${firstGridIndex}"]`
+					);
+					firstGridElement.textContent = 'O';
+
+					player.ownBoard.shipPlacement(
+						orientationValue,
+						x,
+						y,
+						selectedShipLength,
+						selectedShip
+					);
+
+					if (orientationValue === 'Vertical' && selectedShip) {
+						// if vertical
+						for (let i = 1; i < selectedShipLength; i += 1) {
+							// use the dataset.index to locate the subsequent grids
+							// if it is vertical, add 10, but if it is horizontal, add 1
+							firstGridIndex += 10;
+
+							const subsequentGridElement =
+								document.querySelector(
+									`[data-index="${firstGridIndex}"]`
+								);
+							subsequentGridElement.textContent = 'O';
+						}
+					} else if (
+						orientationValue === 'Horizontal' &&
+						selectedShip
+					) {
+						for (let i = 1; i < selectedShipLength; i += 1) {
+							// use the dataset.index to locate the subsequent grids
+							// if it is vertical, add 10, but if it is horizontal, add 1
+							firstGridIndex += 1;
+							const subsequentGridElement =
+								document.querySelector(
+									`[data-index="${firstGridIndex}"]`
+								);
+							subsequentGridElement.textContent = 'O';
+						}
+					}
+
+					// remove event listeener for selected ship
+					const selectedShipClass = (
+						selectedShip.charAt(0).toLowerCase() +
+						selectedShip.slice(1)
+					)
+						.split(' ')
+						.join('');
+
+					const shipUnavailableForPlacement = document.querySelector(
+						`.${selectedShipClass}`
+					);
+					if (shipUnavailableForPlacement) {
+						shipUnavailableForPlacement.removeEventListener(
+							'click',
+							selectShipHandler
+						);
+						shipUnavailableForPlacement.classList.add('removed');
+					} else {
+						console.error(
+							`Element with class .${selectedShipClass} not found.`
+						);
+					}
+					// remove selectedShip
+					selectedShip = null;
+				}
+			},
+			{ once: true } // prevents the same grid from being fired off agn
+		);
 	});
 };
 
@@ -118,7 +155,7 @@ const createPage = function () {
 
 	const carrierShip = document.createElement('p');
 	carrierShip.textContent = 'Carrier';
-	carrierShip.classList.add('Carrier', 'ship');
+	carrierShip.classList.add('carrier', 'ship');
 
 	const battleship = document.createElement('p');
 	battleship.textContent = 'Battleship';
