@@ -9,6 +9,7 @@ import {
 let orientationValue = 'Horizontal';
 let selectedShip = null;
 let selectedShipLength = null;
+let shipsPlacedByPlayer1 = 0;
 
 const getSelectedShipLength = function () {
 	if (selectedShip === 'Carrier') {
@@ -62,7 +63,7 @@ const removeSelectedShip = function () {
 	selectedShip = null;
 };
 
-const addShipToGridEventListener = function (grid, player) {
+const addShipToGridEventListener = function (grid, player1, player2) {
 	return function handleGridClick() {
 		if (selectedShip) {
 			const { x, y } = getGridCoordinate(grid);
@@ -71,37 +72,41 @@ const addShipToGridEventListener = function (grid, player) {
 				`[data-index="${firstGridIndex}"]`
 			);
 
-			player.ownBoard.shipPlacement(
+			player1.ownBoard.shipPlacement(
 				orientationValue,
 				x,
 				y,
 				selectedShipLength,
 				selectedShip
 			);
-
-			if (player.ownBoard.checkSpace) {
+			if (player1.ownBoard.checkSpace) {
 				if (orientationValue === 'Vertical') {
-					firstGridElement.textContent = 'O';
+					firstGridElement.style.backgroundColor = 'green';
 					for (let i = 1; i < selectedShipLength; i += 1) {
 						firstGridIndex += 10;
 						const subsequentGridElement = document.querySelector(
 							`[data-index="${firstGridIndex}"]`
 						);
-						subsequentGridElement.textContent = 'O';
+						subsequentGridElement.style.backgroundColor = 'green';
 					}
 				} else if (orientationValue === 'Horizontal') {
-					firstGridElement.textContent = 'O';
+					firstGridElement.style.backgroundColor = 'green';
 					for (let i = 1; i < selectedShipLength; i += 1) {
 						firstGridIndex += 1;
 						const subsequentGridElement = document.querySelector(
 							`[data-index="${firstGridIndex}"]`
 						);
-						subsequentGridElement.textContent = 'O';
+						subsequentGridElement.style.backgroundColor = 'green';
 					}
 				}
 				// Remove event listener after ship placement
 				grid.removeEventListener('click', handleGridClick);
 				removeSelectedShip();
+				shipsPlacedByPlayer1 += 1;
+				if (shipsPlacedByPlayer1 > 4) {
+					// eslint-disable-next-line no-use-before-define
+					player1Attack(player2);
+				}
 			} else {
 				alert('Choose another grid!');
 			}
@@ -109,13 +114,13 @@ const addShipToGridEventListener = function (grid, player) {
 	};
 };
 
-const addShipToBoard = function (player) {
+const addShipToBoard = function (player1, player2) {
 	// get grid index from addBoard1Grid, process it with getGridCoordinate
 	const gridList = document.querySelectorAll('.grid.one');
 	gridList.forEach((grid) => {
 		grid.addEventListener(
 			'click',
-			addShipToGridEventListener(grid, player)
+			addShipToGridEventListener(grid, player1, player2)
 		);
 	});
 };
@@ -186,17 +191,44 @@ const randomlyAddShiptoAI = function (AIplayer) {
 				const gridToPlaceShip = document.querySelector(
 					`[data-index="2-${gridIndex + j}"]`
 				);
-				gridToPlaceShip.textContent = 'X';
+				gridToPlaceShip.style.backgroundColor = 'green';
+				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		} else {
 			for (let j = 0; j < shipData.shipLength; j += 1) {
 				const gridToPlaceShip = document.querySelector(
 					`[data-index="2-${gridIndex + j * 10}"]`
 				);
-				gridToPlaceShip.textContent = 'X';
+				gridToPlaceShip.style.backgroundColor = 'green';
+				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		}
 	}
+};
+
+const player1Attack = function (player2) {
+	// add event listener to all the grids
+	const player2Grids = document.querySelectorAll('.grid.two');
+	player2Grids.forEach((grid) => {
+		grid.addEventListener(
+			'click',
+			() => {
+				const { x, y } = getGridCoordinate(grid);
+				console.log( x, y );
+				player2.ownBoard.receiveAttack(x, y);
+				console.log(player2.ownBoard.missedAttack);
+				// need to relate to the board
+				if (grid.classList.contains('shipPlaced')) {
+					grid.style.backgroundColor = 'red';
+				} else {
+					grid.style.backgroundColor = 'grey';
+				}
+			},
+			{ once: true }
+		);
+	});
+	// AI automatically attacks. It relates to the board obj, changes
+	// the DOM, and turns the grid red if hits, grey if it doesnt
 };
 
 const createPage = function () {
@@ -255,6 +287,7 @@ const createPage = function () {
 };
 
 export {
+	player1Attack,
 	randomlyAddShiptoAI,
 	createPage,
 	selectShip,

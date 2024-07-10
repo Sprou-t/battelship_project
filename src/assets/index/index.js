@@ -1,6 +1,7 @@
 import './index.css';
 import './reset.css';
 import {
+	player1Attack,
 	createPage,
 	selectShip,
 	addShipToBoard,
@@ -17,11 +18,5 @@ const gameController = (function () {
 	randomlyAddShiptoAI(player2);
 	selectShip();
 	// need to find a way to get x & y
-	addShipToBoard(player1);
-
-	// TODO
-	// seq: click on ship first which will get the length and orientation then
-	// click on the grid to place the getGridCoordinate.The getGridCoordinate
-	// should be used. The gameBoard class should be updated
-	// Also implement the logic of changing the ship's orientation
+	addShipToBoard(player1,  player2);
 })();
