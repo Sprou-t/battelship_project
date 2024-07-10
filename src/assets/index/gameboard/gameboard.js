@@ -1,97 +1,95 @@
 function createBoard() {
 	const boardLength = 10;
 
-	// board is 10x10
-	const board = Array(boardLength)
-		.fill(null)
-		.map((row) =>
-			Array(boardLength)
-				.fill(null)
-				.map((cell) => ({ hit: false, ship: undefined }))
-		);
+	// Initialize the object with properties
+	const boardObject = {
+		board: Array(boardLength)
+			.fill(null)
+			.map(() =>
+				Array(boardLength)
+					.fill(null)
+					.map(() => ({ hit: false, ship: undefined }))
+			),
+		missedAttack: 0,
+		gameOver: false,
+		checkSpace: true,
 
-	const missedAttack = 0;
-	const gameOver = false;
+		// Method for ship placement
+		shipPlacement(orientation, x, y, length, ship) {
+			this.checkSpace = true;
 
-	function shipPlacement(orientation, x, y, length, ship) {
-		let checkSpace = true;
-
-		// if ori false, hori. if ori true, vertical
-		if (orientation === 'Horizontal') {
-			for (let i = 0; i < length; i += 1) {
-				if (board[x + i][y].ship !== undefined) {
-					checkSpace = false;
-					break;
-				}
-			}
-		} else {
-			for (let j = 0; j < length; j += 1) {
-				if (board[x][y + j].ship !== undefined) {
-					checkSpace = false;
-					break;
-				}
-			}
-		}
-
-		if (checkSpace) {
+			// Check if the grid has already been selected by another ship or
+			// if the grids are not enough to fit the entire ship
 			if (orientation === 'Horizontal') {
 				for (let i = 0; i < length; i += 1) {
-					board[x + i][y].ship = ship;
+					if (x + i > 9 || this.board[x + i][y].ship !== undefined) {
+						this.checkSpace = false;
+						console.log(this.checkSpace);
+						break;
+					}
 				}
 			} else {
 				for (let j = 0; j < length; j += 1) {
-					board[x][y + j].ship = ship;
+					if (y + j > 9 || this.board[x][y + j].ship !== undefined) {
+						this.checkSpace = false;
+						break;
+					}
 				}
 			}
-		}
-	}
 
-	// take coordinates and fire off at that coordinate
-	const receiveAttack = function (x, y) {
-		// if attack missed, record down the hit & miss counter
-		if (board[x][y].ship === undefined) {
-			board[x][y].hit = true;
-			this.missedAttack += 1;
-		}
-
-		// if attack hit, record down hit and increase ship hit count
-		if (board[x][y].ship !== undefined) {
-			board[x][y].hit = true;
-			board[x][y].ship.isHit();
-
-			if (board[x][y].ship.isSunk) {
-				// alert that the ship is sunk!
+			if (this.checkSpace) {
+				if (orientation === 'Horizontal') {
+					for (let i = 0; i < length; i += 1) {
+						this.board[x + i][y].ship = ship;
+					}
+				} else {
+					for (let j = 0; j < length; j += 1) {
+						this.board[x][y + j].ship = ship;
+					}
+				}
 			}
-		}
-	};
+		},
 
-	// report game over
-	const reportGameOver = function (
-		ship1Sinkstatus,
-		ship2Sinkstatus,
-		ship3Sinkstatus,
-		ship4Sinkstatus,
-		ship5Sinkstatus
-	) {
-		if (
-			ship1Sinkstatus &&
-			ship2Sinkstatus &&
-			ship3Sinkstatus &&
-			ship4Sinkstatus &&
+		// Method for receiving attack
+		receiveAttack(x, y) {
+			// If attack missed, record the hit & miss counter
+			if (this.board[x][y].ship === undefined) {
+				this.board[x][y].hit = true;
+				this.missedAttack += 1;
+			}
+
+			// If attack hit, record the hit and increase ship hit count
+			if (this.board[x][y].ship !== undefined) {
+				this.board[x][y].hit = true;
+				this.board[x][y].ship.isHit();
+
+				if (this.board[x][y].ship.isSunk) {
+					// Alert that the ship is sunk!
+				}
+			}
+		},
+
+		// Method for reporting game over
+		reportGameOver(
+			ship1Sinkstatus,
+			ship2Sinkstatus,
+			ship3Sinkstatus,
+			ship4Sinkstatus,
 			ship5Sinkstatus
 		) {
-			this.gameOver = true;
-		}
+			if (
+				ship1Sinkstatus &&
+				ship2Sinkstatus &&
+				ship3Sinkstatus &&
+				ship4Sinkstatus &&
+				ship5Sinkstatus
+			) {
+				this.gameOver = true;
+			}
+		},
 	};
 
-	return {
-		board,
-		missedAttack,
-		gameOver,
-		shipPlacement,
-		receiveAttack,
-		reportGameOver,
-	}; // Return both board and shipPlacement
+	return boardObject; // Return the object with properties and methods
 }
 
 export default createBoard;

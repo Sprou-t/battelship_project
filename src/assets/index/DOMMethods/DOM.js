@@ -38,6 +38,30 @@ const selectShip = function () {
 	});
 };
 
+const removeSelectedShip = function () {
+	// remove event listeener for selected ship
+	const selectedShipClass = (
+		selectedShip.charAt(0).toLowerCase() + selectedShip.slice(1)
+	)
+		.split(' ')
+		.join('');
+
+	const shipUnavailableForPlacement = document.querySelector(
+		`.${selectedShipClass}`
+	);
+	if (shipUnavailableForPlacement) {
+		shipUnavailableForPlacement.removeEventListener(
+			'click',
+			selectShipHandler
+		);
+		shipUnavailableForPlacement.classList.add('removed');
+	} else {
+		console.error(`Element with class .${selectedShipClass} not found.`);
+	}
+	// remove selectedShip
+	selectedShip = null;
+};
+
 const addShipToBoard = function (player) {
 	// get grid index from addBoard1Grid, process it with getGridCoordinate
 	const gridList = document.querySelectorAll('.grid.one');
@@ -53,7 +77,6 @@ const addShipToBoard = function (player) {
 					const firstGridElement = document.querySelector(
 						`[data-index = "${firstGridIndex}"]`
 					);
-					firstGridElement.textContent = 'O';
 
 					player.ownBoard.shipPlacement(
 						orientationValue,
@@ -63,7 +86,12 @@ const addShipToBoard = function (player) {
 						selectedShip
 					);
 
-					if (orientationValue === 'Vertical' && selectedShip) {
+					if (
+						orientationValue === 'Vertical' &&
+						selectedShip &&
+						player.ownBoard.checkSpace
+					) {
+						firstGridElement.textContent = 'O';
 						// if vertical
 						for (let i = 1; i < selectedShipLength; i += 1) {
 							// use the dataset.index to locate the subsequent grids
@@ -76,10 +104,13 @@ const addShipToBoard = function (player) {
 								);
 							subsequentGridElement.textContent = 'O';
 						}
+						removeSelectedShip();
 					} else if (
 						orientationValue === 'Horizontal' &&
-						selectedShip
+						selectedShip &&
+						player.ownBoard.checkSpace
 					) {
+						firstGridElement.textContent = 'O';
 						for (let i = 1; i < selectedShipLength; i += 1) {
 							// use the dataset.index to locate the subsequent grids
 							// if it is vertical, add 10, but if it is horizontal, add 1
@@ -90,32 +121,10 @@ const addShipToBoard = function (player) {
 								);
 							subsequentGridElement.textContent = 'O';
 						}
-					}
-
-					// remove event listeener for selected ship
-					const selectedShipClass = (
-						selectedShip.charAt(0).toLowerCase() +
-						selectedShip.slice(1)
-					)
-						.split(' ')
-						.join('');
-
-					const shipUnavailableForPlacement = document.querySelector(
-						`.${selectedShipClass}`
-					);
-					if (shipUnavailableForPlacement) {
-						shipUnavailableForPlacement.removeEventListener(
-							'click',
-							selectShipHandler
-						);
-						shipUnavailableForPlacement.classList.add('removed');
+						removeSelectedShip();
 					} else {
-						console.error(
-							`Element with class .${selectedShipClass} not found.`
-						);
+						alert('Choose another grid!');
 					}
-					// remove selectedShip
-					selectedShip = null;
 				}
 			},
 			{ once: true } // prevents the same grid from being fired off agn

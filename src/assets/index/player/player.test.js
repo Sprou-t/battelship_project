@@ -9,7 +9,7 @@ describe('test createPlayer function', () => {
 
 	test('player has their own gameboard', () => {
 		expect(player1.ownBoard.missedAttack).toBe(0);
-		player1.ownBoard.shipPlacement(0, 1, 1, 3, ship1);
+		player1.ownBoard.shipPlacement('Horizontal', 1, 1, 3, ship1);
 
 		// test ship presence
 		expect(player1.ownBoard.board[2][2].ship).toBe(undefined);

@@ -9,8 +9,8 @@ beforeEach(() => {
 	gamingBoard = createBoard();
 	ship1 = createShip(3);
 	ship2 = createShip(4);
-	gamingBoard.shipPlacement(0, 0, 2, ship1.length, ship1);
-	gamingBoard.shipPlacement(1, 3, 5, ship2.length, ship2);
+	gamingBoard.shipPlacement('Horizontal', 0, 2, ship1.length, ship1);
+	gamingBoard.shipPlacement('Vertical', 3, 5, ship2.length, ship2);
 });
 
 describe('test shipPlacement function to check for correct placement', () => {
