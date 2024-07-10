@@ -10,13 +10,13 @@ const getGridCoordinate = function (grid) {
 	return { x, y };
 };
 
-const markOutGrid = function (grid) {
-	grid.addEventListener('click', () => {
-		// eslint-disable-next-line no-param-reassign
-		grid.textContent = 'X';
-		const gridIndex = grid.dataset.index;
-	});
-};
+// const markOutGrid = function (grid) {
+// 	grid.addEventListener('click', () => {
+// 		// eslint-disable-next-line no-param-reassign
+// 		grid.textContent = 'X';
+// 		const gridIndex = grid.dataset.index;
+// 	});
+// };
 
 // create a function that generates 100 grids in each board
 const addBoard2Grids = function (playerBoard) {
@@ -24,7 +24,7 @@ const addBoard2Grids = function (playerBoard) {
 	for (let i = 0; i < 100; i += 1) {
 		const grid = document.createElement('div');
 		grid.classList.add('grid', 'two');
-		grid.dataset.index = i;
+		grid.dataset.index = `2-${i}`;
 		// markOutGrid(grid, i);
 		playerBoard.append(grid);
 	}

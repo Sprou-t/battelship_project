@@ -62,72 +62,60 @@ const removeSelectedShip = function () {
 	selectedShip = null;
 };
 
+const addShipToGridEventListener = function (grid, player) {
+	return function handleGridClick() {
+		if (selectedShip) {
+			const { x, y } = getGridCoordinate(grid);
+			let firstGridIndex = getGridIndex(grid);
+			const firstGridElement = document.querySelector(
+				`[data-index="${firstGridIndex}"]`
+			);
+
+			player.ownBoard.shipPlacement(
+				orientationValue,
+				x,
+				y,
+				selectedShipLength,
+				selectedShip
+			);
+
+			if (player.ownBoard.checkSpace) {
+				if (orientationValue === 'Vertical') {
+					firstGridElement.textContent = 'O';
+					for (let i = 1; i < selectedShipLength; i += 1) {
+						firstGridIndex += 10;
+						const subsequentGridElement = document.querySelector(
+							`[data-index="${firstGridIndex}"]`
+						);
+						subsequentGridElement.textContent = 'O';
+					}
+				} else if (orientationValue === 'Horizontal') {
+					firstGridElement.textContent = 'O';
+					for (let i = 1; i < selectedShipLength; i += 1) {
+						firstGridIndex += 1;
+						const subsequentGridElement = document.querySelector(
+							`[data-index="${firstGridIndex}"]`
+						);
+						subsequentGridElement.textContent = 'O';
+					}
+				}
+				// Remove event listener after ship placement
+				grid.removeEventListener('click', handleGridClick);
+				removeSelectedShip();
+			} else {
+				alert('Choose another grid!');
+			}
+		}
+	};
+};
+
 const addShipToBoard = function (player) {
 	// get grid index from addBoard1Grid, process it with getGridCoordinate
 	const gridList = document.querySelectorAll('.grid.one');
 	gridList.forEach((grid) => {
 		grid.addEventListener(
 			'click',
-			() => {
-				if (selectedShip) {
-					orientationValue =
-						document.querySelector('.orientationBtn').textContent;
-					const { x, y } = getGridCoordinate(grid);
-					let firstGridIndex = getGridIndex(grid);
-					const firstGridElement = document.querySelector(
-						`[data-index = "${firstGridIndex}"]`
-					);
-
-					player.ownBoard.shipPlacement(
-						orientationValue,
-						x,
-						y,
-						selectedShipLength,
-						selectedShip
-					);
-
-					if (
-						orientationValue === 'Vertical' &&
-						selectedShip &&
-						player.ownBoard.checkSpace
-					) {
-						firstGridElement.textContent = 'O';
-						// if vertical
-						for (let i = 1; i < selectedShipLength; i += 1) {
-							// use the dataset.index to locate the subsequent grids
-							// if it is vertical, add 10, but if it is horizontal, add 1
-							firstGridIndex += 10;
-
-							const subsequentGridElement =
-								document.querySelector(
-									`[data-index="${firstGridIndex}"]`
-								);
-							subsequentGridElement.textContent = 'O';
-						}
-						removeSelectedShip();
-					} else if (
-						orientationValue === 'Horizontal' &&
-						selectedShip &&
-						player.ownBoard.checkSpace
-					) {
-						firstGridElement.textContent = 'O';
-						for (let i = 1; i < selectedShipLength; i += 1) {
-							// use the dataset.index to locate the subsequent grids
-							// if it is vertical, add 10, but if it is horizontal, add 1
-							firstGridIndex += 1;
-							const subsequentGridElement =
-								document.querySelector(
-									`[data-index="${firstGridIndex}"]`
-								);
-							subsequentGridElement.textContent = 'O';
-						}
-						removeSelectedShip();
-					} else {
-						alert('Choose another grid!');
-					}
-				}
-			},
-			{ once: true } // prevents the same grid from being fired off agn
+			addShipToGridEventListener(grid, player)
 		);
 	});
 };
@@ -143,6 +131,72 @@ const changeShipOrientation = function () {
 			orientationValue = orientationBtn.textContent;
 		}
 	});
+};
+
+const randomlyAddShiptoAI = function (AIplayer) {
+	const listOfShipLength = [
+		{ shipName: 'Carrier', shipLength: 5 },
+		{ shipName: 'Battleship', shipLength: 4 },
+		{ shipName: 'Destroyer', shipLength: 3 },
+		{ shipName: 'Submarine', shipLength: 3 },
+		{ shipName: 'Patrol Boat', shipLength: 2 },
+	];
+	const orientationList = ['Horizontal', 'Vertical'];
+
+	// get a random value from 0 to 9 for grid index
+	const getRandomGridValue = function () {
+		const randomValue = Math.floor(Math.random() * 10);
+		return randomValue;
+	};
+
+	// randomly get an orientation: horizontal or vertical
+	const getRandomOrientationValue = function () {
+		const randomValue = Math.floor(Math.random() * 2);
+		return randomValue;
+	};
+
+	// using getRandomGridValue, access the grids. Continue finding until
+	// we find a grid that has enuf space for the entire ship and is not alld
+	// occupied
+	let x;
+	let y;
+	let orientation;
+	for (let i = 0; i < listOfShipLength.length; i += 1) {
+		const shipData = listOfShipLength[i];
+		// continue finding the grid as long as grid selected is not available
+		do {
+			x = getRandomGridValue();
+			y = getRandomGridValue();
+			orientation = orientationList[getRandomOrientationValue()];
+			// get the grid and check whether it has enuf space
+			AIplayer.ownBoard.shipPlacement(
+				orientation,
+				x,
+				y,
+				shipData.shipLength,
+				shipData.shipName
+			);
+		} while (!AIplayer.ownBoard.checkSpace);
+
+		// change x & y to index and add them to DOM in the board
+		const gridIndex = y * 10 + x;
+		// iterate over the ship length
+		if (orientation === 'Horizontal') {
+			for (let j = 0; j < shipData.shipLength; j += 1) {
+				const gridToPlaceShip = document.querySelector(
+					`[data-index="2-${gridIndex + j}"]`
+				);
+				gridToPlaceShip.textContent = 'X';
+			}
+		} else {
+			for (let j = 0; j < shipData.shipLength; j += 1) {
+				const gridToPlaceShip = document.querySelector(
+					`[data-index="2-${gridIndex + j * 10}"]`
+				);
+				gridToPlaceShip.textContent = 'X';
+			}
+		}
+	}
 };
 
 const createPage = function () {
@@ -201,6 +255,7 @@ const createPage = function () {
 };
 
 export {
+	randomlyAddShiptoAI,
 	createPage,
 	selectShip,
 	addShipToBoard,
