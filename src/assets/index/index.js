@@ -1,14 +1,14 @@
 import './index.css';
 import './reset.css';
+import createPage from './DOMMethods/DOM';
+import createPlayer from './player/player';
 import {
-	player1Attack,
-	createPage,
+	changeShipOrientation,
 	selectShip,
 	addShipToBoard,
-	changeShipOrientation,
-	randomlyAddShiptoAI,
-} from './DOMMethods/DOM';
-import createPlayer from './player/player';
+} from './DOMMethods/player1';
+
+import { randomlyAddShiptoAI } from './DOMMethods/player2';
 
 const gameController = (function () {
 	createPage();
@@ -17,6 +17,6 @@ const gameController = (function () {
 	const player2 = createPlayer('AI');
 	randomlyAddShiptoAI(player2);
 	selectShip();
-	// need to find a way to get x & y
-	addShipToBoard(player1, player2); // after adding ships, the match immediately begins!
+	// after adding ships, the match immediately begins as players attack!
+	addShipToBoard(player1, player2);
 })();

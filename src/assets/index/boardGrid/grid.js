@@ -17,13 +17,10 @@ const getPlayer2GridCoordinate = function (grid) {
 	return { x, y };
 };
 
-// const markOutGrid = function (grid) {
-// 	grid.addEventListener('click', () => {
-// 		// eslint-disable-next-line no-param-reassign
-// 		grid.textContent = 'X';
-// 		const gridIndex = grid.dataset.index;
-// 	});
-// };
+const getGridIndexFromCoordinate = function (x, y) {
+	const gridIndex = y * 10 + x;
+	return gridIndex;
+};
 
 // create a function that generates 100 grids in each board
 const addBoard2Grids = function (playerBoard) {
@@ -48,6 +45,7 @@ const addBoard1Grids = function (playerBoard) {
 };
 
 export {
+	getGridIndexFromCoordinate,
 	addBoard1Grids,
 	addBoard2Grids,
 	getPlayer1GridCoordinate,
