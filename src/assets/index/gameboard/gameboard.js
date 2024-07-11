@@ -9,7 +9,8 @@ function createBoard() {
 				Array(boardLength)
 					.fill(null)
 					.map(() => ({ hit: false, ship: undefined }))
-			),
+		),
+		
 		missedAttack: 0,
 		gameOver: false,
 		checkSpace: true,
@@ -24,7 +25,6 @@ function createBoard() {
 				for (let i = 0; i < length; i += 1) {
 					if (x + i > 9 || this.board[x + i][y].ship !== undefined) {
 						this.checkSpace = false;
-						console.log(this.checkSpace);
 						break;
 					}
 				}

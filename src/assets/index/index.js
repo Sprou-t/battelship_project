@@ -18,5 +18,5 @@ const gameController = (function () {
 	randomlyAddShiptoAI(player2);
 	selectShip();
 	// need to find a way to get x & y
-	addShipToBoard(player1,  player2);
+	addShipToBoard(player1, player2); // after adding ships, the match immediately begins!
 })();

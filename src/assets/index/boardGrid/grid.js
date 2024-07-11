@@ -1,10 +1,17 @@
-const getGridIndex = function (grid) {
+const getPlayer1GridIndex = function (grid) {
 	const gridIndex = Math.floor(grid.dataset.index);
 	return gridIndex;
 };
 
-const getGridCoordinate = function (grid) {
+const getPlayer1GridCoordinate = function (grid) {
 	const gridIndex = grid.dataset.index;
+	const x = gridIndex % 10;
+	const y = Math.floor(gridIndex / 10);
+	return { x, y };
+};
+
+const getPlayer2GridCoordinate = function (grid) {
+	const gridIndex = grid.dataset.gridNum;
 	const x = gridIndex % 10;
 	const y = Math.floor(gridIndex / 10);
 	return { x, y };
@@ -23,8 +30,8 @@ const addBoard2Grids = function (playerBoard) {
 	// const gridList = [];
 	for (let i = 0; i < 100; i += 1) {
 		const grid = document.createElement('div');
-		grid.classList.add('grid', 'two');
-		grid.dataset.index = `2-${i}`;
+		grid.classList.add('grid', 'secondPlayer', `${i}`);
+		grid.dataset.gridNum = i; // Change dataset attribute to gridNum
 		// markOutGrid(grid, i);
 		playerBoard.append(grid);
 	}
@@ -40,4 +47,10 @@ const addBoard1Grids = function (playerBoard) {
 	}
 };
 
-export { addBoard1Grids, addBoard2Grids, getGridCoordinate, getGridIndex };
+export {
+	addBoard1Grids,
+	addBoard2Grids,
+	getPlayer1GridCoordinate,
+	getPlayer1GridIndex,
+	getPlayer2GridCoordinate,
+};

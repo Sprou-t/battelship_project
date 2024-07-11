@@ -11,6 +11,7 @@ function createShip(length) {
 			if (this.hitStat === this.length) {
 				this.isSunk = true;
 			}
+			return true;
 		},
 	};
 }

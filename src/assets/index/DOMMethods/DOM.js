@@ -2,9 +2,12 @@
 import {
 	addBoard1Grids,
 	addBoard2Grids,
-	getGridCoordinate,
-	getGridIndex,
+	getPlayer1GridCoordinate,
+	getPlayer2GridCoordinate,
+	getPlayer1GridIndex,
 } from '../boardGrid/grid';
+
+import createShip from '../ship/ship';
 
 let orientationValue = 'Horizontal';
 let selectedShip = null;
@@ -56,18 +59,15 @@ const removeSelectedShip = function () {
 			selectShipHandler
 		);
 		shipUnavailableForPlacement.classList.add('removed');
-	} else {
-		console.error(`Element with class .${selectedShipClass} not found.`);
 	}
-	// remove selectedShip
 	selectedShip = null;
 };
 
 const addShipToGridEventListener = function (grid, player1, player2) {
 	return function handleGridClick() {
 		if (selectedShip) {
-			const { x, y } = getGridCoordinate(grid);
-			let firstGridIndex = getGridIndex(grid);
+			const { x, y } = getPlayer1GridCoordinate(grid);
+			let firstGridIndex = getPlayer1GridIndex(grid);
 			const firstGridElement = document.querySelector(
 				`[data-index="${firstGridIndex}"]`
 			);
@@ -105,7 +105,7 @@ const addShipToGridEventListener = function (grid, player1, player2) {
 				shipsPlacedByPlayer1 += 1;
 				if (shipsPlacedByPlayer1 > 4) {
 					// eslint-disable-next-line no-use-before-define
-					player1Attack(player2);
+					playerAttacksEachOtherSubsequently(player2)
 				}
 			} else {
 				alert('Choose another grid!');
@@ -139,12 +139,12 @@ const changeShipOrientation = function () {
 };
 
 const randomlyAddShiptoAI = function (AIplayer) {
-	const listOfShipLength = [
-		{ shipName: 'Carrier', shipLength: 5 },
-		{ shipName: 'Battleship', shipLength: 4 },
-		{ shipName: 'Destroyer', shipLength: 3 },
-		{ shipName: 'Submarine', shipLength: 3 },
-		{ shipName: 'Patrol Boat', shipLength: 2 },
+	const listOfShipObj = [
+		createShip(5),
+		createShip(4),
+		createShip(3),
+		createShip(3),
+		createShip(2),
 	];
 	const orientationList = ['Horizontal', 'Vertical'];
 
@@ -166,8 +166,8 @@ const randomlyAddShiptoAI = function (AIplayer) {
 	let x;
 	let y;
 	let orientation;
-	for (let i = 0; i < listOfShipLength.length; i += 1) {
-		const shipData = listOfShipLength[i];
+	for (let i = 0; i < listOfShipObj.length; i += 1) {
+		const shipObj = listOfShipObj[i];
 		// continue finding the grid as long as grid selected is not available
 		do {
 			x = getRandomGridValue();
@@ -178,8 +178,8 @@ const randomlyAddShiptoAI = function (AIplayer) {
 				orientation,
 				x,
 				y,
-				shipData.shipLength,
-				shipData.shipName
+				shipObj.length,
+				shipObj
 			);
 		} while (!AIplayer.ownBoard.checkSpace);
 
@@ -187,37 +187,36 @@ const randomlyAddShiptoAI = function (AIplayer) {
 		const gridIndex = y * 10 + x;
 		// iterate over the ship length
 		if (orientation === 'Horizontal') {
-			for (let j = 0; j < shipData.shipLength; j += 1) {
+			for (let j = 0; j < shipObj.length; j += 1) {
 				const gridToPlaceShip = document.querySelector(
-					`[data-index="2-${gridIndex + j}"]`
+					`[data-grid-num="${gridIndex + j}"]`
 				);
 				gridToPlaceShip.style.backgroundColor = 'green';
 				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		} else {
-			for (let j = 0; j < shipData.shipLength; j += 1) {
+			for (let j = 0; j < shipObj.length; j += 1) {
 				const gridToPlaceShip = document.querySelector(
-					`[data-index="2-${gridIndex + j * 10}"]`
+					`[data-grid-num="${gridIndex + j * 10}"]`
 				);
 				gridToPlaceShip.style.backgroundColor = 'green';
 				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		}
 	}
+	console.log(AIplayer.ownBoard.board);
 };
 
 const player1Attack = function (player2) {
 	// add event listener to all the grids
-	const player2Grids = document.querySelectorAll('.grid.two');
+	const player2Grids = document.querySelectorAll('.grid.secondPlayer');
 	player2Grids.forEach((grid) => {
 		grid.addEventListener(
 			'click',
 			() => {
-				const { x, y } = getGridCoordinate(grid);
-				console.log( x, y );
+				const { x, y } = getPlayer2GridCoordinate(grid);
 				player2.ownBoard.receiveAttack(x, y);
-				console.log(player2.ownBoard.missedAttack);
-				// need to relate to the board
+				// color the grid red if it is occupied by a ship
 				if (grid.classList.contains('shipPlaced')) {
 					grid.style.backgroundColor = 'red';
 				} else {
@@ -227,8 +226,18 @@ const player1Attack = function (player2) {
 			{ once: true }
 		);
 	});
-	// AI automatically attacks. It relates to the board obj, changes
-	// the DOM, and turns the grid red if hits, grey if it doesnt
+};
+const AIAttack = function (player1) {
+	// AI attacks
+};
+
+const playerAttacksEachOtherSubsequently = function (player2) {
+	const roundCounter = 1;
+	if (roundCounter % 2 === 1) {
+		player1Attack(player2);
+	} else {
+		AIAttack();
+	}
 };
 
 const createPage = function () {
