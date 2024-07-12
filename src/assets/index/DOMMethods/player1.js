@@ -12,15 +12,18 @@ import { getRandomGridValue, randomlyAddShiptoAI } from './player2';
 
 import createShip from '../ship/ship';
 
+import createPage from './DOM';
+
 let orientationValue = 'Horizontal';
 let selectedShip = null;
 let selectedShipLength = null;
 let selectedShipObj = null;
 let shipsPlacedByPlayer1 = 0;
+
 // eslint-disable-next-line import/no-mutable-exports
 let roundCounter = 1;
-const player1 = createPlayer('Human'); // how to link the players to their respective board?
-const player2 = createPlayer('AI');
+let player1 = createPlayer('Human'); // how to link the players to their respective board?
+let player2 = createPlayer('AI');
 
 const changeShipOrientation = function () {
 	const orientationBtn = document.querySelector('.orientationBtn');
@@ -168,13 +171,22 @@ const player1Attack = function () {
 		player2Grids.forEach((g) => {
 			g.removeEventListener('click', player1AttackFunction);
 		});
+		player2.ownBoard.reportGameOver();
 		// eslint-disable-next-line no-use-before-define
 		playerAttacksEachOtherSubsequently();
 	};
-	player2Grids.forEach((grid) => {
+	if (!player2.ownBoard.gameOver) {
+		player2Grids.forEach((grid) => {
+			// eslint-disable-next-line no-use-before-define
+			grid.addEventListener('click', player1AttackFunction);
+		});
+	} else {
+		setTimeout(() => {
+			alert('Player 1 wins!');
+		}, 0);
 		// eslint-disable-next-line no-use-before-define
-		grid.addEventListener('click', player1AttackFunction);
-	});
+		restartGame();
+	}
 };
 
 const attackedGrids = new Set();
@@ -213,10 +225,31 @@ const playerAttacksEachOtherSubsequently = function () {
 	}
 };
 
+const restartGame = function () {
+	const header = document.querySelector('.header');
+	const boardDiv = document.querySelector('.boardDiv');
+	header.remove();
+	boardDiv.remove();
+
+	player1 = createPlayer('Human');
+	player2 = createPlayer('AI');
+	orientationValue = 'Horizontal';
+	selectedShip = null;
+	selectedShipLength = null;
+	selectedShipObj = null;
+	shipsPlacedByPlayer1 = 0;
+	roundCounter = 1;
+
+	createPage();
+	changeShipOrientation();
+	selectShip();
+	addShipToBoard();
+};
 export {
 	changeShipOrientation,
 	player1Attack,
 	selectShip,
 	addShipToBoard,
 	getSelectedShipLength,
+	// restartGame,
 };

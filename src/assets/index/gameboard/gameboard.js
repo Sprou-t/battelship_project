@@ -12,6 +12,7 @@ function createBoard() {
 			),
 
 		missedAttack: 0,
+		numOfShipSunk: 0,
 		gameOver: false,
 		checkSpace: true,
 
@@ -65,25 +66,14 @@ function createBoard() {
 
 				if (this.board[x][y].ship.isSunk) {
 					// Alert that the ship is sunk!
+					this.numOfShipSunk += 1;
 				}
 			}
 		},
 
 		// Method for reporting game over
-		reportGameOver(
-			ship1Sinkstatus,
-			ship2Sinkstatus,
-			ship3Sinkstatus,
-			ship4Sinkstatus,
-			ship5Sinkstatus
-		) {
-			if (
-				ship1Sinkstatus &&
-				ship2Sinkstatus &&
-				ship3Sinkstatus &&
-				ship4Sinkstatus &&
-				ship5Sinkstatus
-			) {
+		reportGameOver() {
+			if (this.numOfShipSunk === 5) {
 				this.gameOver = true;
 			}
 		},
