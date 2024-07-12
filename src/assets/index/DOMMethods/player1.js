@@ -6,7 +6,9 @@ import {
 	getGridIndexFromCoordinate,
 } from '../boardGrid/grid';
 
-import { getRandomGridValue } from './player2';
+import createPlayer from '../player/player';
+
+import { getRandomGridValue, randomlyAddShiptoAI } from './player2';
 
 import createShip from '../ship/ship';
 
@@ -17,6 +19,8 @@ let selectedShipObj = null;
 let shipsPlacedByPlayer1 = 0;
 // eslint-disable-next-line import/no-mutable-exports
 let roundCounter = 1;
+const player1 = createPlayer('Human'); // how to link the players to their respective board?
+const player2 = createPlayer('AI');
 
 const changeShipOrientation = function () {
 	const orientationBtn = document.querySelector('.orientationBtn');
@@ -81,7 +85,7 @@ const removeSelectedShip = function () {
 	selectedShip = null;
 };
 
-const addShipToGridEventListener = function (grid, player1, player2) {
+const addShipToGridEventListener = function (grid) {
 	return function handleGridClick() {
 		if (selectedShip) {
 			const { x, y } = getPlayer1GridCoordinate(grid);
@@ -125,7 +129,8 @@ const addShipToGridEventListener = function (grid, player1, player2) {
 				shipsPlacedByPlayer1 += 1;
 				if (shipsPlacedByPlayer1 > 4) {
 					// eslint-disable-next-line no-use-before-define
-					playerAttacksEachOtherSubsequently(player1, player2);
+					player1Attack(player1, player2);
+					randomlyAddShiptoAI(player2);
 				}
 			} else {
 				alert('Choose another grid!');
@@ -134,45 +139,47 @@ const addShipToGridEventListener = function (grid, player1, player2) {
 	};
 };
 
-const addShipToBoard = function (player1, player2) {
+const addShipToBoard = function () {
 	// get grid index from addBoard1Grid, process it with getGridCoordinate
 	const gridList = document.querySelectorAll('.grid.one');
 	gridList.forEach((grid) => {
-		grid.addEventListener(
-			'click',
-			addShipToGridEventListener(grid, player1, player2)
-		);
+		grid.addEventListener('click', addShipToGridEventListener(grid));
 	});
 };
 
-const player1Attack = function (player2) {
-	// add event listener to all the grids
+const player1Attack = function () {
 	const player2Grids = document.querySelectorAll(
 		'.grid.secondPlayer:not(.marked)'
 	);
+	const player1AttackFunction = function (event) {
+		const grid = event.target;
+		// eslint-disable-next-line no-undef
+		const { x, y } = getPlayer2GridCoordinate(grid);
+		player2.ownBoard.receiveAttack(x, y);
+		// color the grid red if it is occupied by a ship
+		if (grid.classList.contains('shipPlaced')) {
+			grid.style.backgroundColor = 'red';
+		} else {
+			grid.style.backgroundColor = 'grey';
+		}
+		grid.classList.add('marked');
+		roundCounter += 1;
+		console.log(roundCounter);
+		player2Grids.forEach((g) => {
+			g.removeEventListener('click', player1AttackFunction);
+		});
+		// eslint-disable-next-line no-use-before-define
+		playerAttacksEachOtherSubsequently();
+	};
 	player2Grids.forEach((grid) => {
-		grid.addEventListener(
-			'click',
-			() => {
-				const { x, y } = getPlayer2GridCoordinate(grid);
-				player2.ownBoard.receiveAttack(x, y);
-				// color the grid red if it is occupied by a ship
-				if (grid.classList.contains('shipPlaced')) {
-					grid.style.backgroundColor = 'red';
-				} else {
-					grid.style.backgroundColor = 'grey';
-				}
-				grid.classList.add('marked');
-				roundCounter += 1;
-				console.log(roundCounter);
-			},
-			{ once: true }
-		);
+		// eslint-disable-next-line no-use-before-define
+		grid.addEventListener('click', player1AttackFunction);
 	});
 };
+
 const attackedGrids = new Set();
 
-const AIAttack = function (player1) {
+const AIAttack = function () {
 	// get random x & y val
 	let x;
 	let y;
@@ -194,13 +201,15 @@ const AIAttack = function (player1) {
 	// eslint-disable-next-line no-import-assign
 	roundCounter += 1;
 	console.log(roundCounter);
+	// eslint-disable-next-line no-use-before-define
+	playerAttacksEachOtherSubsequently();
 };
 
-const playerAttacksEachOtherSubsequently = function (player1, player2) {
+const playerAttacksEachOtherSubsequently = function () {
 	if (roundCounter % 2 === 1) {
-		player1Attack(player2);
+		player1Attack();
 	} else if (roundCounter % 2 === 0) {
-		AIAttack(player1);
+		AIAttack();
 	}
 };
 

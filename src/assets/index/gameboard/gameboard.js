@@ -9,8 +9,8 @@ function createBoard() {
 				Array(boardLength)
 					.fill(null)
 					.map(() => ({ hit: false, ship: undefined }))
-		),
-		
+			),
+
 		missedAttack: 0,
 		gameOver: false,
 		checkSpace: true,
