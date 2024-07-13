@@ -209,17 +209,23 @@ const AIAttack = function () {
 	attackedGrids.add(gridIndex);
 	const grid = document.querySelector(`[data-index="${gridIndex}"]`);
 	player1.ownBoard.receiveAttack(x, y);
-	setTimeout(() => {
-		if (grid.classList.contains('shipPlaced')) {
-			grid.style.backgroundColor = 'red';
-		} else {
-			grid.style.backgroundColor = 'grey';
-		}
-		// eslint-disable-next-line no-import-assign
-		roundCounter += 1;
-		// eslint-disable-next-line no-use-before-define
-		playerAttacksEachOtherSubsequently();
-	}, 500);
+	player1.ownBoard.reportGameOver();
+	if (!player1.ownBoard.gameOver) {
+		setTimeout(() => {
+			if (grid.classList.contains('shipPlaced')) {
+				grid.style.backgroundColor = 'red';
+			} else {
+				grid.style.backgroundColor = 'grey';
+			}
+			player1.ownBoard.reportGameOver();
+			// eslint-disable-next-line no-import-assign
+			roundCounter += 1;
+			// eslint-disable-next-line no-use-before-define
+			playerAttacksEachOtherSubsequently();
+		}, 500);
+	} else {
+		alert('Player 2 wins!')
+	}
 };
 
 const playerAttacksEachOtherSubsequently = function () {
