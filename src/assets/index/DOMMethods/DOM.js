@@ -45,7 +45,8 @@ const createPage = function () {
 	const player2Board = document.createElement('div');
 	player2Board.classList.add('player2Board');
 	const textIndicator = document.createElement('p');
-	textIndicator.textContent = 'Battleship!';
+	textIndicator.classList.add('textIndicator');
+	textIndicator.textContent = 'Place all your ships!';
 
 	addBoard1Grids(player1Board);
 	addBoard2Grids(player2Board);

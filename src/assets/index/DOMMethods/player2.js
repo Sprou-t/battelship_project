@@ -56,7 +56,6 @@ const randomlyAddShiptoAI = function (AIplayer) {
 				const gridToPlaceShip = document.querySelector(
 					`[data-grid-num="${gridIndex + j}"]`
 				);
-				gridToPlaceShip.style.backgroundColor = 'green';
 				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		} else {
@@ -64,7 +63,6 @@ const randomlyAddShiptoAI = function (AIplayer) {
 				const gridToPlaceShip = document.querySelector(
 					`[data-grid-num="${gridIndex + j * 10}"]`
 				);
-				gridToPlaceShip.style.backgroundColor = 'green';
 				gridToPlaceShip.classList.add('shipPlaced');
 			}
 		}

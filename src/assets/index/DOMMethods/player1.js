@@ -132,6 +132,11 @@ const addShipToGridEventListener = function (grid) {
 				shipsPlacedByPlayer1 += 1;
 				if (shipsPlacedByPlayer1 > 4) {
 					// eslint-disable-next-line no-use-before-define
+					const textIndicator =
+						document.querySelector('.textIndicator');
+					textIndicator.textContent =
+						'Match begins! Player 1 attack!';
+					// eslint-disable-next-line no-use-before-define
 					player1Attack(player1, player2);
 					randomlyAddShiptoAI(player2);
 				}
@@ -167,7 +172,6 @@ const player1Attack = function () {
 		}
 		grid.classList.add('marked');
 		roundCounter += 1;
-		console.log(roundCounter);
 		player2Grids.forEach((g) => {
 			g.removeEventListener('click', player1AttackFunction);
 		});
@@ -205,22 +209,27 @@ const AIAttack = function () {
 	attackedGrids.add(gridIndex);
 	const grid = document.querySelector(`[data-index="${gridIndex}"]`);
 	player1.ownBoard.receiveAttack(x, y);
-	if (grid.classList.contains('shipPlaced')) {
-		grid.style.backgroundColor = 'red';
-	} else {
-		grid.style.backgroundColor = 'grey';
-	}
-	// eslint-disable-next-line no-import-assign
-	roundCounter += 1;
-	console.log(roundCounter);
-	// eslint-disable-next-line no-use-before-define
-	playerAttacksEachOtherSubsequently();
+	setTimeout(() => {
+		if (grid.classList.contains('shipPlaced')) {
+			grid.style.backgroundColor = 'red';
+		} else {
+			grid.style.backgroundColor = 'grey';
+		}
+		// eslint-disable-next-line no-import-assign
+		roundCounter += 1;
+		// eslint-disable-next-line no-use-before-define
+		playerAttacksEachOtherSubsequently();
+	}, 500);
 };
 
 const playerAttacksEachOtherSubsequently = function () {
 	if (roundCounter % 2 === 1) {
+		const textIndicator = document.querySelector('.textIndicator');
+		textIndicator.textContent = 'Player 1 attack!';
 		player1Attack();
 	} else if (roundCounter % 2 === 0) {
+		const textIndicator = document.querySelector('.textIndicator');
+		textIndicator.textContent = 'Player 2 attack!';
 		AIAttack();
 	}
 };
