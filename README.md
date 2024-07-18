@@ -15,41 +15,5 @@ This is a simple game of battleship. The game is played on a 10x10 grid. The pla
 
 This project was developed with TDD approach.
 
-## Getting started
+[Live preview](https://sprou-t.github.io/battleship/)
 
-### Dependencies
-
-- Describe any prerequisites, libraries, OS version, etc., needed before installing program.(eg. Windows 10)
-
-### Installing
-
-- How/where to download your program
-- Any modifications needed to be made to files/folders
-
-### Executing program
-
-- How to run the program
-- Step-by-step bullets
-
-`code blocks for commands`
-
-## Help
-
-Any advise for common problems or issues.
-
-## Authors
-
-[Lau Wei Bin](https://github.com/Sprou-t?tab=repositories)
-
-## Version History
-
-- 0.1
-  - initial release
-
-## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
-
-## Acknowledgements
-
-Inspiration, code snippets, etc.
